@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Inventario {
-    private final Map<Integer, Equipo> equipos;
+    private final Map<String, Equipo> equipos;
     private double ingresosTotales;
 
     public Inventario() {
@@ -14,19 +14,18 @@ public class Inventario {
     }
 
     private void precargarDatosIniciales() {
-        // Precarga de al menos 2 equipos por categoría con códigos numéricos enteros
-        agregarEquipo(new Proyector(101, "Epson", "PowerLite E20", 150.00, 3400, true));
-        agregarEquipo(new Proyector(102, "ViewSonic", "PA503S", 100.00, 2700, false));
+        agregarEquipo(new Proyector("101", "Epson", "PowerLite E20", 150.00, 3400, true));
+        agregarEquipo(new Proyector("102", "ViewSonic", "PA503S", 100.00, 2700, false));
 
-        agregarEquipo(new Camara(201, "Sony", "FX30", 200.00, 2160));
-        agregarEquipo(new Camara(202, "Canon", "T7", 120.00, 1080));
+        agregarEquipo(new Camara("201", "Sony", "FX30", 200.00, 2160));
+        agregarEquipo(new Camara("202", "Canon", "T7", 120.00, 1080));
 
-        agregarEquipo(new EquipoSonido(301, "JBL", "EON615", 200.00, 1.5));
-        agregarEquipo(new EquipoSonido(302, "Yamaha", "StagePas", 150.00, 0.4));
+        agregarEquipo(new EquipoSonido("301", "JBL", "EON615", 200.00, 1.5));
+        agregarEquipo(new EquipoSonido("302", "Yamaha", "StagePas", 150.00, 0.4));
     }
 
     public boolean agregarEquipo(Equipo equipo) {
-        if (equipo == null || equipo.getCode() <= 0) {
+        if (equipo == null || equipo.getCode() == null || equipo.getCode().trim().isEmpty()) {
             return false;
         }
         if (equipos.containsKey(equipo.getCode())) {
@@ -36,8 +35,8 @@ public class Inventario {
         return true;
     }
 
-    public Equipo buscarEquipo(int code) {
-        if (code <= 0) {
+    public Equipo buscarEquipo(String code) {
+        if (code == null || code.trim().isEmpty()) {
             return null;
         }
         return equipos.get(code);
@@ -47,7 +46,7 @@ public class Inventario {
         return new ArrayList<>(equipos.values());
     }
 
-    public double cotizar(int code, int dias) {
+    public double cotizar(String code, int dias) {
         Equipo eq = buscarEquipo(code);
         if (eq == null || dias <= 0) {
             return -1.0;
@@ -55,7 +54,7 @@ public class Inventario {
         return eq.calculateCost(dias);
     }
 
-    public boolean confirmarAlquiler(int code, int dias) {
+    public boolean confirmarAlquiler(String code, int dias) {
         Equipo eq = buscarEquipo(code);
         if (eq == null || !eq.isAvailable() || dias <= 0) {
             return false;
@@ -66,7 +65,7 @@ public class Inventario {
         return true;
     }
 
-    public boolean registrarDevolucion(int code) {
+    public boolean registrarDevolucion(String code) {
         Equipo eq = buscarEquipo(code);
         if (eq == null || eq.isAvailable()) {
             return false;

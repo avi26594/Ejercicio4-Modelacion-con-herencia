@@ -1,41 +1,27 @@
 public class Proyector extends Equipo {
     private int lumens;
-    private boolean wireless;
+    private boolean es3D;
 
-    public Proyector(int code, String brand, String model, double dailyCost, int lumens, boolean wireless) {
+    public Proyector(String code, String brand, String model, double dailyCost, int lumens, boolean es3D) {
         super(code, brand, model, dailyCost);
         this.lumens = lumens;
-        this.wireless = wireless;
+        this.es3D = es3D;
     }
 
-    public int getLumens() { 
-        return lumens; 
-    }
-
-    public void setLumens(int lumens) { 
-        this.lumens = lumens; 
-    }
-
-    public boolean isWireless() { 
-        return wireless; 
-    }
-
-    public void setWireless(boolean wireless) { 
-        this.wireless = wireless; 
-    }
+    public int getLumens() { return lumens; }
+    public boolean isEs3D() { return es3D; }
 
     @Override
     protected double calculateExtraCost(int days) {
-        // Recargo de Q50 por día si tiene conectividad inalámbrica
-        if (this.wireless) {
-            return 50.0 * days;
-        }
-        return 0.0;
+        double extra = 0.0;
+        if (lumens > 3000) extra += 50.0 * days;
+        if (es3D) extra += 30.0 * days;
+        return extra;
     }
 
     @Override
     public String getDetails() {
-        return "Lúmenes: " + lumens + " | Inalámbrico: " + (wireless ? "Sí" : "No");
+        return "Lúmenes: " + lumens + " | 3D: " + (es3D ? "Sí" : "No");
     }
 
     @Override
