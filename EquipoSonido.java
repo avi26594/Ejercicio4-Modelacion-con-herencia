@@ -1,24 +1,22 @@
 public class EquipoSonido extends Equipo {
-    private double powerWatts;
+    private double powerKw;
 
-    public EquipoSonido(int code, String brand, String model, double dailyCost, double powerWatts) {
+    public EquipoSonido(int code, String brand, String model, double dailyCost, double powerKw) {
         super(code, brand, model, dailyCost);
-        this.powerWatts = powerWatts;
+        this.powerKw = powerKw;
     }
 
-    public double getPowerWatts() { return powerWatts; }
-    public void setPowerWatts(double powerWatts) { this.powerWatts = powerWatts; }
+    public double getPowerKw() { return powerKw; }
+    public void setPowerKw(double powerKw) { this.powerKw = powerKw; }
 
     @Override
-    public double calculateExtraCost(int days) {
-        if (this.powerWatts > 500.0) {
-            return 20.0;
-        }
-        return 0.0;
+    protected double calculateExtraCost(int days) {
+        // Recargo de Q100 por cada kW por cada día de alquiler
+        return this.powerKw * 100.0 * days;
     }
 
     @Override
     public String toString() {
-        return super.toString() + " | Tipo: Equipo de Sonido | Potencia: " + String.format("%.1f", powerWatts) + "W";
+        return super.toString() + " | Tipo: Equipo de Sonido | Potencia: " + String.format("%.2f", powerKw) + " kW";
     }
 }

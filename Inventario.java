@@ -4,26 +4,25 @@ import java.util.List;
 import java.util.Map;
 
 public class Inventario {
-    // CÓDIGO CLASE POO: Estructura de Map para almacenar el inventario
     private final Map<Integer, Equipo> equipos;
-    private double ingresosTotales; // AJUSTE: Acumulador de ingresos requeridos por la guía
+    private double ingresosTotales;
 
     public Inventario() {
         this.equipos = new HashMap<>();
         this.ingresosTotales = 0.0;
-        precargarDatosIniciales(); // AJUSTE: Cumple el requisito de iniciar con 2 equipos por categoría
+        precargarDatosIniciales();
     }
 
-    // AJUSTE: Precarga automática exigida en el enunciado (2 de cada tipo)
     private void precargarDatosIniciales() {
-        agregarEquipo(new Proyector(101, "Epson", "PowerLite E20", 25.00, 3400, true));
-        agregarEquipo(new Proyector(102, "ViewSonic", "PA503S", 18.00, 2700, false));
+        // 2 de cada categoría cumpliendo los casos descritos
+        agregarEquipo(new Proyector(101, "Epson", "PowerLite E20", 150.00, 3400, true));
+        agregarEquipo(new Proyector(102, "ViewSonic", "PA503S", 100.00, 2700, false));
         
-        agregarEquipo(new Camara(201, "Canon", "EOS Rebel T7", 35.00, 24));
-        agregarEquipo(new Camara(202, "Sony", "Alpha a6000", 30.00, 16));
+        agregarEquipo(new Camara(201, "Sony", "FX30", 200.00, 2160));
+        agregarEquipo(new Camara(202, "Canon", "T7", 120.00, 1080));
         
-        agregarEquipo(new EquipoSonido(301, "JBL", "EON615", 45.00, 1000.0));
-        agregarEquipo(new EquipoSonido(302, "Yamaha", "StagePas 400BT", 32.00, 400.5));
+        agregarEquipo(new EquipoSonido(301, "JBL", "EON615", 200.00, 1.5));
+        agregarEquipo(new EquipoSonido(302, "Yamaha", "StagePas", 150.00, 0.4));
     }
 
     public boolean agregarEquipo(Equipo equipo) {
@@ -42,23 +41,21 @@ public class Inventario {
         return new ArrayList<>(equipos.values());
     }
 
-    // AJUSTE: Confirmar alquiler y registrar el ingreso generado
     public boolean confirmarAlquiler(int code, int dias) {
         Equipo eq = buscarEquipo(code);
         if (eq == null || !eq.isAvailable()) {
-            return false; // Inconsistencia: no existe o ya está alquilado
+            return false;
         }
         double monto = eq.calculateCost(dias);
         eq.setAvailable(false);
-        ingresosTotales += monto; // Modifica ingresos solo al confirmar
+        ingresosTotales += monto;
         return true;
     }
 
-    // AJUSTE: Registrar devolución de equipo
     public boolean registrarDevolucion(int code) {
         Equipo eq = buscarEquipo(code);
         if (eq == null || eq.isAvailable()) {
-            return false; // Inconsistencia: no existe o ya estaba disponible
+            return false;
         }
         eq.setAvailable(true);
         return true;
@@ -66,5 +63,32 @@ public class Inventario {
 
     public double getIngresosTotales() {
         return ingresosTotales;
+    }
+
+    public void mostrarReporteDetallado() {
+        int projDisp = 0, projAlq = 0;
+        int camDisp = 0, camAlq = 0;
+        int sonDisp = 0, sonAlq = 0;
+
+        for (Equipo eq : equipos.values()) {
+            if (eq instanceof Proyector) {
+                if (eq.isAvailable()) projDisp++; else projAlq++;
+            } else if (eq instanceof Camara) {
+                if (eq.isAvailable()) camDisp++; else camAlq++;
+            } else if (eq instanceof EquipoSonido) {
+                if (eq.isAvailable()) sonDisp++; else sonAlq++;
+            }
+        }
+
+        System.out.println("\n===========================================");
+        System.out.println("            REPORTE GENERAL");
+        System.out.println("===========================================");
+        System.out.println("Proyectores      : Total: " + (projDisp + projAlq) + " | Disponibles: " + projDisp + " | Alquilados: " + projAlq);
+        System.out.println("Cámaras          : Total: " + (camDisp + camAlq) + " | Disponibles: " + camDisp + " | Alquilados: " + camAlq);
+        System.out.println("Equipos de Sonido: Total: " + (sonDisp + sonAlq) + " | Disponibles: " + sonDisp + " | Alquilados: " + sonAlq);
+        System.out.println("-------------------------------------------");
+        System.out.println("TOTAL EQUIPOS REGISTRADOS: " + equipos.size());
+        System.out.println("INGRESOS TOTALES ACUMULADOS: Q" + String.format("%.2f", ingresosTotales));
+        System.out.println("===========================================");
     }
 }
