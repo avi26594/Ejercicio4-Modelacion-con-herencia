@@ -66,7 +66,7 @@ public class Main {
             return;
         }
 
-        int codigo = leerEnteroPositivo("Ingrese el código único entero del equipo: ");
+        String codigo = leerTexto("Ingrese el código único del equipo: ");
         if (inventario.buscarEquipo(codigo) != null) {
             System.out.println("[Error] Ya existe un equipo registrado con el código " + codigo + ".");
             return;
@@ -110,7 +110,7 @@ public class Main {
         int subOpcion = leerEntero("Seleccione una opción: ");
 
         if (subOpcion == 1) {
-            int codigo = leerEnteroPositivo("Ingrese el código a buscar: ");
+            String codigo = leerTexto("Ingrese el código a buscar: ");
             Equipo eq = inventario.buscarEquipo(codigo);
             if (eq != null) {
                 System.out.println("\n[Información del Equipo]");
@@ -130,7 +130,7 @@ public class Main {
 
     private static void cotizarAlquiler() {
         System.out.println("\n--- COTIZAR ALQUILER ---");
-        int codigo = leerEnteroPositivo("Ingrese el código del equipo a cotizar: ");
+        String codigo = leerTexto("Ingrese el código del equipo a cotizar: ");
         Equipo eq = inventario.buscarEquipo(codigo);
 
         if (eq == null) {
@@ -154,7 +154,7 @@ public class Main {
 
     private static void confirmarAlquiler() {
         System.out.println("\n--- CONFIRMAR ALQUILER ---");
-        int codigo = leerEnteroPositivo("Ingrese el código del equipo a alquilar: ");
+        String codigo = leerTexto("Ingrese el código del equipo a alquilar: ");
         Equipo eq = inventario.buscarEquipo(codigo);
 
         if (eq == null) {
@@ -163,7 +163,7 @@ public class Main {
         }
 
         if (!eq.isAvailable()) {
-            System.out.println("[Error] El equipo con código " + codigo + " ya se encuentra alquilado actualmente.");
+            System.out.println("[Error] El equipo con código " + codigo + " ya se encuentra ALQUILADO.");
             return;
         }
 
@@ -188,12 +188,12 @@ public class Main {
 
     private static void devolverEquipo() {
         System.out.println("\n--- REGISTRAR DEVOLUCIÓN ---");
-        int codigo = leerEnteroPositivo("Ingrese el código del equipo devuelto: ");
+        String codigo = leerTexto("Ingrese el código del equipo devuelto: ");
 
         if (inventario.registrarDevolucion(codigo)) {
             System.out.println("\n[Éxito] Devolución registrada correctamente. El equipo vuelve a estar disponible.");
         } else {
-            System.out.println("\n[Error] No se pudo procesar la devolución. Verifique si el equipo existe y si realmente estaba alquilado.");
+            System.out.println("\n[Error] El equipo con código " + codigo + " ya está DISPONIBLE en el inventario o no existe.");
         }
     }
 
@@ -210,7 +210,7 @@ public class Main {
                 String entrada = scanner.nextLine().trim();
                 return Integer.parseInt(entrada);
             } catch (NumberFormatException e) {
-                System.out.println("[Error] Debe ingresar un número entero válido.");
+                System.out.println("[Error] Formato incorrecto. Ingrese un entero válido.");
             }
         }
     }
