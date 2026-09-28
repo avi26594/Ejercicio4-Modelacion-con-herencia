@@ -1,10 +1,11 @@
 public abstract class Equipo {
-    private int code;
-    private String brand;
-    private String model;
-    private double dailyCost;
-    private boolean available;
+    protected int code;
+    protected String brand;
+    protected String model;
+    protected double dailyCost;
+    protected boolean available;
 
+    // Constructor inicial (equipo recién registrado, disponible por defecto)
     public Equipo(int code, String brand, String model, double dailyCost) {
         this.code = code;
         this.brand = brand;
@@ -13,6 +14,7 @@ public abstract class Equipo {
         this.available = true;
     }
 
+    // Constructor completo
     public Equipo(int code, String brand, String model, double dailyCost, boolean available) {
         this.code = code;
         this.brand = brand;
@@ -21,34 +23,63 @@ public abstract class Equipo {
         this.available = available;
     }
 
-    public int getCode() { return code; }
-    public void setCode(int code) { this.code = code; }
+    // Getters y Setters alineados a los lineamientos de la guía
+    public int getCode() {
+        return code;
+    }
 
-    public String getBrand() { return brand; }
-    public void setBrand(String brand) { this.brand = brand; }
+    public void setCode(int code) {
+        this.code = code;
+    }
 
-    public String getModel() { return model; }
-    public void setModel(String model) { this.model = model; }
+    public String getBrand() {
+        return brand;
+    }
 
-    public double getDailyCost() { return dailyCost; }
-    public void setDailyCost(double dailyCost) { this.dailyCost = dailyCost; }
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
 
-    public boolean isAvailable() { return available; }
-    public void setAvailable(boolean available) { this.available = available; }
+    public String getModel() {
+        return model;
+    }
 
-    // Template Method
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public double getDailyCost() {
+        return dailyCost;
+    }
+
+    public void setDailyCost(double dailyCost) {
+        this.dailyCost = dailyCost;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    // Patrón Template Method: cálculo base + costo extra según la subclase
     public double calculateCost(int days) {
         return (dailyCost * days) + calculateExtraCost(days);
     }
 
+    // Métodos abstractos para polimorfismo
     protected abstract double calculateExtraCost(int days);
+
+    public abstract String getDetails();
 
     @Override
     public String toString() {
-        return "Código: " + code +
-               " | Marca: " + brand +
-               " | Modelo: " + model +
-               " | Tarifa diaria: Q" + String.format("%.2f", dailyCost) +
+        return "Código: " + code + 
+               " | Marca: " + brand + 
+               " | Modelo: " + model + 
+               " | Tarifa diaria: Q" + String.format("%.2f", dailyCost) + 
                " | Estado: " + (available ? "Disponible" : "Alquilado");
     }
 }

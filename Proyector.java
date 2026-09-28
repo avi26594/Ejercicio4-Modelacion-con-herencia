@@ -8,14 +8,25 @@ public class Proyector extends Equipo {
         this.wireless = wireless;
     }
 
-    public int getLumens() { return lumens; }
-    public void setLumens(int lumens) { this.lumens = lumens; }
+    public int getLumens() { 
+        return lumens; 
+    }
 
-    public boolean isWireless() { return wireless; }
-    public void setWireless(boolean wireless) { this.wireless = wireless; }
+    public void setLumens(int lumens) { 
+        this.lumens = lumens; 
+    }
+
+    public boolean isWireless() { 
+        return wireless; 
+    }
+
+    public void setWireless(boolean wireless) { 
+        this.wireless = wireless; 
+    }
 
     @Override
-    public double calculateExtraCost(int days) {
+    protected double calculateExtraCost(int days) {
+        // Recargo de Q50 por día si tiene conectividad inalámbrica
         if (this.wireless) {
             return 50.0 * days;
         }
@@ -23,7 +34,12 @@ public class Proyector extends Equipo {
     }
 
     @Override
+    public String getDetails() {
+        return "Lúmenes: " + lumens + " | Inalámbrico: " + (wireless ? "Sí" : "No");
+    }
+
+    @Override
     public String toString() {
-        return super.toString() + " | Tipo: Proyector | Lúmenes: " + lumens + " | Inalámbrico: " + (wireless ? "Sí" : "No");
+        return super.toString() + " | Tipo: Proyector | " + getDetails();
     }
 }

@@ -14,18 +14,21 @@ public class Inventario {
     }
 
     private void precargarDatosIniciales() {
-        // 2 de cada categoría cumpliendo los casos descritos
+        // Precarga de al menos 2 equipos por categoría con códigos numéricos enteros
         agregarEquipo(new Proyector(101, "Epson", "PowerLite E20", 150.00, 3400, true));
         agregarEquipo(new Proyector(102, "ViewSonic", "PA503S", 100.00, 2700, false));
-        
+
         agregarEquipo(new Camara(201, "Sony", "FX30", 200.00, 2160));
         agregarEquipo(new Camara(202, "Canon", "T7", 120.00, 1080));
-        
+
         agregarEquipo(new EquipoSonido(301, "JBL", "EON615", 200.00, 1.5));
         agregarEquipo(new EquipoSonido(302, "Yamaha", "StagePas", 150.00, 0.4));
     }
 
     public boolean agregarEquipo(Equipo equipo) {
+        if (equipo == null || equipo.getCode() <= 0) {
+            return false;
+        }
         if (equipos.containsKey(equipo.getCode())) {
             return false;
         }
@@ -34,6 +37,9 @@ public class Inventario {
     }
 
     public Equipo buscarEquipo(int code) {
+        if (code <= 0) {
+            return null;
+        }
         return equipos.get(code);
     }
 
@@ -41,9 +47,17 @@ public class Inventario {
         return new ArrayList<>(equipos.values());
     }
 
+    public double cotizar(int code, int dias) {
+        Equipo eq = buscarEquipo(code);
+        if (eq == null || dias <= 0) {
+            return -1.0;
+        }
+        return eq.calculateCost(dias);
+    }
+
     public boolean confirmarAlquiler(int code, int dias) {
         Equipo eq = buscarEquipo(code);
-        if (eq == null || !eq.isAvailable()) {
+        if (eq == null || !eq.isAvailable() || dias <= 0) {
             return false;
         }
         double monto = eq.calculateCost(dias);
@@ -80,15 +94,15 @@ public class Inventario {
             }
         }
 
-        System.out.println("\n===========================================");
-        System.out.println("            REPORTE GENERAL");
-        System.out.println("===========================================");
+        System.out.println("\n=============================================");
+        System.out.println("               REPORTE GENERAL               ");
+        System.out.println("=============================================");
         System.out.println("Proyectores      : Total: " + (projDisp + projAlq) + " | Disponibles: " + projDisp + " | Alquilados: " + projAlq);
         System.out.println("Cámaras          : Total: " + (camDisp + camAlq) + " | Disponibles: " + camDisp + " | Alquilados: " + camAlq);
         System.out.println("Equipos de Sonido: Total: " + (sonDisp + sonAlq) + " | Disponibles: " + sonDisp + " | Alquilados: " + sonAlq);
-        System.out.println("-------------------------------------------");
+        System.out.println("---------------------------------------------");
         System.out.println("TOTAL EQUIPOS REGISTRADOS: " + equipos.size());
         System.out.println("INGRESOS TOTALES ACUMULADOS: Q" + String.format("%.2f", ingresosTotales));
-        System.out.println("===========================================");
+        System.out.println("=============================================");
     }
 }

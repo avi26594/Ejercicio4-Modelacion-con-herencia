@@ -41,9 +41,9 @@ public class Main {
     }
 
     private static void mostrarMenu() {
-        System.out.println("\n===========================================");
-        System.out.println("     SISTEMA DE ALQUILER - ENESCENA");
-        System.out.println("===========================================");
+        System.out.println("\n=============================================");
+        System.out.println("       SISTEMA DE ALQUILER - ENESCENA        ");
+        System.out.println("=============================================");
         System.out.println("1. Registrar nuevo equipo");
         System.out.println("2. Consultar inventario / equipo");
         System.out.println("3. Cotizar alquiler");
@@ -51,7 +51,7 @@ public class Main {
         System.out.println("5. Registrar devolución");
         System.out.println("6. Ver reporte general");
         System.out.println("7. Salir");
-        System.out.println("===========================================");
+        System.out.println("=============================================");
     }
 
     private static void registrarEquipo() {
@@ -66,7 +66,7 @@ public class Main {
             return;
         }
 
-        int codigo = leerEntero("Ingrese el código único del equipo: ");
+        int codigo = leerEnteroPositivo("Ingrese el código único entero del equipo: ");
         if (inventario.buscarEquipo(codigo) != null) {
             System.out.println("[Error] Ya existe un equipo registrado con el código " + codigo + ".");
             return;
@@ -80,14 +80,16 @@ public class Main {
 
         switch (tipo) {
             case 1:
-                int lumenes = (int) leerDoublePositivo("Ingrese la luminosidad en lúmenes: ");
+                int lumenes = leerEnteroPositivo("Ingrese la luminosidad en lúmenes (entero): ");
                 boolean inalambrico = leerBooleano("¿Tiene conectividad inalámbrica? (s/n): ");
                 nuevoEquipo = new Proyector(codigo, marca, modelo, tarifaDiaria, lumenes, inalambrico);
                 break;
+
             case 2:
-                int resolucion = (int) leerDoublePositivo("Ingrese la resolución máxima (píxeles verticales, ej. 1080, 2160): ");
+                int resolucion = leerEnteroPositivo("Ingrese la resolución máxima en píxeles verticales (ej. 1080, 2160): ");
                 nuevoEquipo = new Camara(codigo, marca, modelo, tarifaDiaria, resolucion);
                 break;
+
             case 3:
                 double potencia = leerDoublePositivo("Ingrese la potencia nominal en kW (ej. 1.5): ");
                 nuevoEquipo = new EquipoSonido(codigo, marca, modelo, tarifaDiaria, potencia);
@@ -108,7 +110,7 @@ public class Main {
         int subOpcion = leerEntero("Seleccione una opción: ");
 
         if (subOpcion == 1) {
-            int codigo = leerEntero("Ingrese el código a buscar: ");
+            int codigo = leerEnteroPositivo("Ingrese el código a buscar: ");
             Equipo eq = inventario.buscarEquipo(codigo);
             if (eq != null) {
                 System.out.println("\n[Información del Equipo]");
@@ -128,7 +130,7 @@ public class Main {
 
     private static void cotizarAlquiler() {
         System.out.println("\n--- COTIZAR ALQUILER ---");
-        int codigo = leerEntero("Ingrese el código del equipo a cotizar: ");
+        int codigo = leerEnteroPositivo("Ingrese el código del equipo a cotizar: ");
         Equipo eq = inventario.buscarEquipo(codigo);
 
         if (eq == null) {
@@ -136,23 +138,23 @@ public class Main {
             return;
         }
 
-        int dias = (int) leerDoublePositivo("Ingrese la cantidad de días de alquiler: ");
+        int dias = leerEnteroPositivo("Ingrese la cantidad de días de alquiler: ");
         double costoTotal = eq.calculateCost(dias);
 
-        System.out.println("\n===========================================");
-        System.out.println("            RESUMEN DE COTIZACIÓN          ");
-        System.out.println("===========================================");
+        System.out.println("\n=============================================");
+        System.out.println("             RESUMEN DE COTIZACIÓN           ");
+        System.out.println("=============================================");
         System.out.println("Equipo: " + eq.getBrand() + " " + eq.getModel() + " (Código: " + eq.getCode() + ")");
         System.out.println("Estado actual: " + (eq.isAvailable() ? "Disponible" : "Ocupado / Alquilado"));
         System.out.println("Días solicitados: " + dias);
         System.out.println("Monto total estimado: Q" + String.format("%.2f", costoTotal));
-        System.out.println("===========================================");
+        System.out.println("=============================================");
         System.out.println("(Nota: Esta cotización es informativa y no altera el inventario ni los ingresos)");
     }
 
     private static void confirmarAlquiler() {
         System.out.println("\n--- CONFIRMAR ALQUILER ---");
-        int codigo = leerEntero("Ingrese el código del equipo a alquilar: ");
+        int codigo = leerEnteroPositivo("Ingrese el código del equipo a alquilar: ");
         Equipo eq = inventario.buscarEquipo(codigo);
 
         if (eq == null) {
@@ -165,7 +167,7 @@ public class Main {
             return;
         }
 
-        int dias = (int) leerDoublePositivo("Ingrese la cantidad de días de alquiler: ");
+        int dias = leerEnteroPositivo("Ingrese la cantidad de días de alquiler: ");
         double costoTotal = eq.calculateCost(dias);
 
         System.out.println("\nEquipo seleccionado: " + eq.getBrand() + " " + eq.getModel());
@@ -186,7 +188,7 @@ public class Main {
 
     private static void devolverEquipo() {
         System.out.println("\n--- REGISTRAR DEVOLUCIÓN ---");
-        int codigo = leerEntero("Ingrese el código del equipo devuelto: ");
+        int codigo = leerEnteroPositivo("Ingrese el código del equipo devuelto: ");
 
         if (inventario.registrarDevolucion(codigo)) {
             System.out.println("\n[Éxito] Devolución registrada correctamente. El equipo vuelve a estar disponible.");
@@ -199,7 +201,7 @@ public class Main {
         inventario.mostrarReporteDetallado();
     }
 
-    // --- MÉTODOS DE VALIDACIÓN Y MANEJO DE EXCEPCIONES DE ENTRADA ---
+    // --- MÉTODOS DE LECTURA Y VALIDACIÓN DE ENTRADAS ---
 
     private static int leerEntero(String mensaje) {
         while (true) {
@@ -213,6 +215,16 @@ public class Main {
         }
     }
 
+    private static int leerEnteroPositivo(String mensaje) {
+        while (true) {
+            int valor = leerEntero(mensaje);
+            if (valor > 0) {
+                return valor;
+            }
+            System.out.println("[Error] El valor debe ser un entero estrictamente mayor a cero.");
+        }
+    }
+
     private static double leerDoublePositivo(String mensaje) {
         while (true) {
             try {
@@ -221,9 +233,8 @@ public class Main {
                 double valor = Double.parseDouble(entrada);
                 if (valor > 0) {
                     return valor;
-                } else {
-                    System.out.println("[Error] El valor debe ser estrictamente mayor a cero.");
                 }
+                System.out.println("[Error] El valor debe ser estrictamente mayor a cero.");
             } catch (NumberFormatException e) {
                 System.out.println("[Error] Debe ingresar un valor numérico válido.");
             }
